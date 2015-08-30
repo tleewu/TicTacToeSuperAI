@@ -39,26 +39,22 @@ class TicTacToeNode
   def winning_node?(evaluator)
 
     return true if board.over? && board.winner == evaluator
-    #return false if !board.over? && (board.winner != evaluator || board.winner == nil)
+    return false if board.over? && (board.winner != evaluator || board.winner == nil)
     
     if next_mover_mark == evaluator
-      
-      idx = 1
-      puts idx
       children.each do |child|
-        
-        puts idx
-        return true if child.board.over? && child.board.winner == evaluator
-        idx+=1
+        #return true if child.board.over? && child.board.winner == evaluator
+        return child.winning_node?(evaluator)
       end
+      
       return false
       
     else
       
       children.each do |child|
-        return false if !child.winning_node?(evaluator)
+        return true if child.winning_node?(evaluator)
       end
-      return true
+      return false
       
     end
   
