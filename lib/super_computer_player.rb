@@ -9,57 +9,33 @@ class SuperComputerPlayer < ComputerPlayer
     # I am going to check all of the root node's children to make sure
     # that there is not an immediate move that is a winner or a move that will be a loser
     
-    root_node.children.each do |child|
-      if child.board.over? && child.board.winner == mark
-        return child.prev_move_pos
-      end
-    end
-    '''
-    if root_node.losing_node(swap(mark))
-      root_node.children.each do |child|
-        return child.prev_move_pos if !child.losing_node?(mark)
-      end
-    end'''
+    # moves = []
+    # If there are any nodes that can win, select any of those and add it to moves
     
-    if TicTacToeNode.new(game.board, swap(mark)).losing_node?(mark)#If the opponent had one more move, he/she would beat the computer
-      puts "TEST 1"
-      root_node.children.each do |child|
-        return child.prev_move_pos if !child.losing_node?(mark)
-      end
-      raise "Error"
-    end
-    #Checking if move will cause a loser
     
+    # moves: [Node1, Node2]
+    
+    # If there is NO chance of winning AKA moves is empty after checking for winning_nodes?(mark)
+    # then select non-losing nodes AKA !losing_nodes? and do those moves
     
     root_node.children.each do |child|
-      if child.board.over? && child.board.winner == swap(mark)
-        return child.prev_move_pos
-      end
-    end
-    #Current board state.
-    
-    if root_node.winning_node?(mark)
-      #There is a winning node in the current state!
-      #BFS method?
-      bfs_array = [root_node]
-      while true
-        bfs_array.each do |root|
-          if root.board.over? && root.board.winner == mark
-            return root.prev_move_pos
-          end
-          bfs_array += root.children
-        end
-      end
-    
-            
-        '''
-    
-    root_node.children.each do |child|
-      #Search for the winners
       if child.winning_node?(mark)
-        #There is a winner,now we gotta search for it.
-     '''   
+        puts "FIRST"
+        return child.prev_move_pos
+      end
     end
+    
+    ## If it reaches past this stage, there are no winning nodes. Suck it.
+    
+    root_node.children.each do |child|
+      if !child.losing_node?(mark)
+        puts "SECOND"
+        return child.prev_move_pos
+      end
+    end
+    
+    raise "ERROR"
+ 
   end
   
   def swap(mark)
@@ -69,6 +45,7 @@ class SuperComputerPlayer < ComputerPlayer
       mark = :x
     end
   end
+
 end
 
 if __FILE__ == $PROGRAM_NAME

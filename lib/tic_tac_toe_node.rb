@@ -18,6 +18,10 @@ class TicTacToeNode
 
     #No matter what move you make, you will lose. AKA all children will lose.
     if next_mover_mark == evaluator
+      # children.all? do |child|
+      #   child.losing_node?(evaluator)
+      # end
+      
       children.each do |child|
         # If one child is not a losing node, then this will not be a losing node.
         # We need to check if ALL children are losing nodes
@@ -30,13 +34,17 @@ class TicTacToeNode
     else #The opponent's turn IF NEXT_MOVER_MARK IS NOT YOU
       #if each children's game is over and the winner is the evaluator
       children.each do |child|
-        return true if child.board.over? && child.board.winner == swap(evaluator)
+        return true if child.losing_node?(evaluator)
+        ## ORIGINAL true if child.board.over? && child.board.winner == swap(evaluator)
       end
       return false
     end
   end
 
   def winning_node?(evaluator)
+    # if board.over?
+    #   return board.winner == evaluator
+    # end
 
     return true if board.over? && board.winner == evaluator
     return false if board.over? && (board.winner != evaluator || board.winner == nil)
@@ -44,7 +52,7 @@ class TicTacToeNode
     if next_mover_mark == evaluator
       children.each do |child|
         #return true if child.board.over? && child.board.winner == evaluator
-        return child.winning_node?(evaluator)
+        return true if child.winning_node?(evaluator)
       end
       
       return false
@@ -52,9 +60,9 @@ class TicTacToeNode
     else
       
       children.each do |child|
-        return true if child.winning_node?(evaluator)
+        return false if !child.winning_node?(evaluator)
       end
-      return false
+      return true
       
     end
   
